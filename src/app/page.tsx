@@ -1,15 +1,15 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { useAudioPlayer } from '@/hooks/useAudioPlayer'
-import { BackgroundGif } from '@/components/BackgroundGif'
-import { MusicControls } from '@/components/MusicControl'
-import { VolumeControl } from '@/components/VolumeControl'
-import { PlaylistControl } from '@/components/PlaylistControl'
-import { Timer } from '@/components/Timer'
+import { useState, useEffect } from "react";
+import { useAudioPlayer } from "@/hooks/useAudioPlayer";
+import { BackgroundGif } from "@/components/BackgroundGif";
+import { MusicControls } from "@/components/MusicControl";
+import { VolumeControl } from "@/components/VolumeControl";
+import { PlaylistControl } from "@/components/PlaylistControl";
+import { Timer } from "@/components/Timer";
 
 export default function Home() {
-  const [isClient, setIsClient] = useState(false)
+  const [isClient, setIsClient] = useState(false);
   const {
     currentTrack,
     isPlaying,
@@ -19,15 +19,15 @@ export default function Home() {
     previousTrack,
     playlist,
     addToPlaylist,
-    removeFromPlaylist
-  } = useAudioPlayer()
+    removeFromPlaylist,
+  } = useAudioPlayer();
 
   useEffect(() => {
-    setIsClient(true)
-  }, [])
+    setIsClient(true);
+  }, []);
 
   if (!isClient) {
-    return null
+    return null;
   }
 
   return (
@@ -36,20 +36,21 @@ export default function Home() {
       <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-[2px]">
         <div className="container mx-auto px-4 py-8 flex flex-col h-full">
           <header className="text-center mb-12">
-            <h1 className="text-5xl font-bold text-purple-300 mb-4 tracking-tight">Lo-Fi Study Music</h1>
+            <h1 className="text-5xl font-bold text-purple-300 mb-4 tracking-tight">
+              Lo-Fi Study Music
+            </h1>
             <p className="text-xl text-gray-300">Focus, Relax, and Study</p>
           </header>
           <div className="flex-grow grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-start">
-            <div className="bg-gray-800 bg-opacity-60 p-6 rounded-lg shadow-lg backdrop-blur-sm">
-              <MusicControls
-                isPlaying={isPlaying}
-                togglePlayPause={togglePlayPause}
-                nextTrack={nextTrack}
-                previousTrack={previousTrack}
-                currentTrack={currentTrack}
-              />
-            </div>
-            <div className="bg-gray-800 bg-opacity-60 p-6 rounded-lg shadow-lg backdrop-blur-sm">
+            <MusicControls
+              isPlaying={isPlaying}
+              togglePlayPause={togglePlayPause}
+              nextTrack={nextTrack}
+              previousTrack={previousTrack}
+              currentTrack={currentTrack}
+            />
+
+            <div className="relative  top-24 left-32">
               <VolumeControl setVolume={setVolume} />
             </div>
             <div className="bg-gray-800 bg-opacity-60 p-6 rounded-lg shadow-lg backdrop-blur-sm">
@@ -66,5 +67,5 @@ export default function Home() {
         </div>
       </div>
     </main>
-  )
+  );
 }
