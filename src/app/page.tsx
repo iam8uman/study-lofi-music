@@ -53,14 +53,14 @@ export default function Home() {
             <div className="relative  top-24 left-32">
               <VolumeControl setVolume={setVolume} />
             </div>
-            <div className="bg-gray-800 bg-opacity-60 p-6 rounded-lg shadow-lg backdrop-blur-sm">
+            <div className="relative  -top-24 left-32">
               <PlaylistControl
                 playlist={playlist}
                 addToPlaylist={addToPlaylist}
                 removeFromPlaylist={removeFromPlaylist}
               />
             </div>
-            <div className="bg-gray-800 bg-opacity-60 p-6 rounded-lg shadow-lg backdrop-blur-sm">
+            <div className="relative  top-36 left-32">
               <Timer />
             </div>
           </div>
