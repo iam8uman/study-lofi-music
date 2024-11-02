@@ -42,7 +42,7 @@ export function Timer() {
 
   return (
     <div className="flex flex-col items-center space-y-4">
-      <div className="relative group">
+      <div className="relative group ">
         <div className="w-8 h-8 rounded-3xl  bg-purple-500 border-2 border-slate-100 shadow-neon flex items-center justify-center transition-all duration-300 group-hover:w-48 group-hover:h-48 group-hover:shadow-neon-lg">
           <div className="hidden group-hover:flex flex-col items-center space-y-4 w-full px-4">
             <h3 className="text-lg font-semibold text-purple-300">Study Timer</h3>

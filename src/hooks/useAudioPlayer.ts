@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from 'react'
 export interface Track {
   id: string
   title: string
-  artist: string
   url: string
 }
 

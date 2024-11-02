@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useAudioPlayer } from "@/hooks/useAudioPlayer";
+import { useEffect, useState } from "react";
+import { Track } from "@/hooks/useAudioPlayer";
 import { BackgroundGif } from "@/components/BackgroundGif";
 import { MusicControls } from "@/components/MusicControl";
 import { VolumeControl } from "@/components/VolumeControl";
@@ -9,26 +9,84 @@ import { PlaylistControl } from "@/components/PlaylistControl";
 import { Timer } from "@/components/Timer";
 
 export default function Home() {
-  const [isClient, setIsClient] = useState(false);
-  const {
-    currentTrack,
-    isPlaying,
-    togglePlayPause,
-    setVolume,
-    nextTrack,
-    previousTrack,
-    playlist,
-    addToPlaylist,
-    removeFromPlaylist,
-  } = useAudioPlayer();
+  const [tracks, setTracks] = useState<Track[]>([]);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+  const [volume, setVolume] = useState(1);
 
+  // Fetch and cache tracks from the API
   useEffect(() => {
-    setIsClient(true);
+    const fetchTracks = async () => {
+      try {
+        const cachedTracks = localStorage.getItem("audioTracks");
+        if (cachedTracks) {
+          setTracks(JSON.parse(cachedTracks));
+          return;
+        }
+
+        const response = await fetch("/api/tracks", {
+          cache: "force-cache",
+        });
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const data = await response.json();
+        localStorage.setItem("audioTracks", JSON.stringify(data));
+        setTracks(data);
+      } catch (error) {
+        console.error("Error fetching tracks:", error);
+        // Fallback tracks if API fails
+        const fallbackTracks = [
+          { id: "1", title: "🕊️", url: "/sound/bird_chirping.mp3" },
+          { id: "2", title: "⛈", url: "/sound/thundering.mp3" },
+          { id: "3", title: "❤️‍🩹", url: "/sound/relaxing.mp3" },
+        ];
+        setTracks(fallbackTracks);
+      }
+    };
+    fetchTracks();
   }, []);
 
-  if (!isClient) {
-    return null;
-  }
+  // Initialize and manage audio
+  useEffect(() => {
+    if (tracks.length > 0) {
+      const track = tracks[currentTrackIndex];
+      const newAudio = new Audio(track.url);
+      newAudio.volume = volume;
+      setAudio(newAudio);
+
+      newAudio.addEventListener("ended", handleNextTrack);
+      return () => {
+        newAudio.removeEventListener("ended", handleNextTrack);
+        newAudio.pause();
+      };
+    }
+  }, [currentTrackIndex, tracks]);
+
+  // Handle Play/Pause
+  const handlePlayPause = () => {
+    if (audio) {
+      if (isPlaying) {
+        audio.pause();
+      } else {
+        audio.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  // Volume Control
+  useEffect(() => {
+    if (audio) audio.volume = volume;
+  }, [volume, audio]);
+
+  const handleNextTrack = () => {
+    setCurrentTrackIndex((prevIndex) => (prevIndex + 1) % tracks.length);
+  };
+
+  const handlePreviousTrack = () => {
+    setCurrentTrackIndex((prevIndex) => (prevIndex - 1 + tracks.length) % tracks.length);
+  };
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-gray-900 text-gray-100">
@@ -44,23 +102,24 @@ export default function Home() {
           <div className="flex-grow grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-start">
             <MusicControls
               isPlaying={isPlaying}
-              togglePlayPause={togglePlayPause}
-              nextTrack={nextTrack}
-              previousTrack={previousTrack}
-              currentTrack={currentTrack}
+              togglePlayPause={handlePlayPause}
+              nextTrack={handleNextTrack}
+              previousTrack={handlePreviousTrack}
+              currentTrack={tracks[currentTrackIndex]}
             />
-
-            <div className="relative  top-24 left-32">
+            <div className="relative top-24 left-32">
               <VolumeControl setVolume={setVolume} />
             </div>
-            <div className="relative  -top-24 left-32">
+            <div className="relative -top-24 left-32">
               <PlaylistControl
-                playlist={playlist}
-                addToPlaylist={addToPlaylist}
-                removeFromPlaylist={removeFromPlaylist}
+                playlist={tracks}
+                addToPlaylist={(track) => setTracks((prev) => [...prev, track])}
+                removeFromPlaylist={(id) =>
+                  setTracks((prev) => prev.filter((track) => track.id !== id))
+                }
               />
             </div>
-            <div className="relative  top-36 left-32">
+            <div className="relative top-36 left-32">
               <Timer />
             </div>
           </div>

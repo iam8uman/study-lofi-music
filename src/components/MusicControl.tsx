@@ -37,7 +37,6 @@ export function MusicControls({
       {currentTrack && (
         <div className="text-center mt-4">
           <p className="text-lg font-semibold text-purple-200">{currentTrack.title}</p>
-          <p className="text-sm text-gray-400">{currentTrack.artist}</p>
         </div>
       )}
     </div>
