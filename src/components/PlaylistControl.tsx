@@ -63,7 +63,6 @@ export function PlaylistControl({
                     >
                       <div>
                         <p className="font-medium text-purple-200">{track.title}</p>
-                        <p className="text-sm text-gray-400">{track.artist}</p>
                       </div>
                       <Button
                         variant="ghost"

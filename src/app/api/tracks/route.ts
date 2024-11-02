@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from 'next/server';
 
 // Sample track data
 const tracks = [
@@ -8,11 +8,14 @@ const tracks = [
 ];
 
 // API route handler
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === "GET") {
-    res.status(200).json(tracks);
-  } else {
-    res.setHeader("Allow", ["GET"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+export async function GET() {
+  try {
+    return NextResponse.json(tracks);
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && 'response' in error) {
+      const err = error as { response?: { data?: unknown } };
+      return NextResponse.json({ error: err.response?.data }, { status: 500 });
+    }
+    return NextResponse.json({ error: 'An unknown error occurred' }, { status: 500 });
   }
 }
