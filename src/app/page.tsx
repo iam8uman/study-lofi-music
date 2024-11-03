@@ -100,7 +100,7 @@ export default function Home() {
         <div className="container mx-auto px-4 py-8 flex flex-col h-full">
           <header className="text-center mb-12">
             <h1 className="text-7xl font-bold text-white mb-4 tracking-tight font-mono">
-              Lo-Fi Study Music
+              Lofi❤️‍🩹Girl
             </h1>
             <p className="text-2xl text-purple-600">Focus, Relax, and Study</p>
           </header>
@@ -124,7 +124,7 @@ export default function Home() {
                 }
               />
             </div>
-            <div className="relative top-[14rem] left-20">
+            <div className="relative top-20 left-20">
               <Timer />
             </div>
           </div>

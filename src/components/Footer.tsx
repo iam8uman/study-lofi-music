@@ -23,11 +23,49 @@ const modalVariants = {
   visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 30 } }
 }
 
+const overlayVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.3 } }
+}
+
 interface Todo {
   id: string;
   text: string;
   completed: boolean;
   createdAt: string;
+}
+
+const BreakModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  if (!isOpen) return null
+
+  return (
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
+      variants={overlayVariants}
+      className="fixed inset-0 bg-gradient-to-b from-purple-900/80 to-gray-900/90 backdrop-blur-sm flex items-center justify-center z-50"
+    >
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        className="bg-gray-800/90 p-44 relative bottom-44 rounded-2xl border border-purple-500/30 shadow-2xl max-w-7xl h-[97vh] mb-96 w-full mx-4"
+      >
+        <div className="text-center space-y-6">
+          <Coffee className="h-44 w-44 text-purple-300 mx-auto" />
+          <h2 className="text-2xl font-serif text-purple-100">Time for a Break!</h2>
+          <p className="text-purple-300/80">Take a moment to relax, breathe, and enjoy your coffee ☕</p>
+          <Button
+            onClick={onClose}
+            className="bg-purple-500/20 px-8 py-6 hover:bg-purple-500/30 text-purple-100 border border-purple-500/30"
+          >
+            Back to Work
+          </Button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
 }
 
 const TodoModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
@@ -135,7 +173,7 @@ const TodoModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
 const icons = [
   { Icon: Music, label: 'Playlist', onClick: () => console.log('Open playlist') },
   { Icon: MessageCircle, label: 'Notes', onClick: undefined },
-  { Icon: Coffee, label: 'Take a break', onClick: () => console.log('Start break timer') },
+  { Icon: Coffee, label: 'Take a break', onClick: undefined },
   { Icon: BookOpen, label: 'Study resources', onClick: () => console.log('Open study resources') },
   { Icon: Settings, label: 'Settings', onClick: () => console.log('Open settings') },
   { Icon: HelpCircle, label: 'Help', onClick: () => console.log('Open help') },
@@ -143,6 +181,7 @@ const icons = [
 
 export function Footer() {
   const [isTodoOpen, setIsTodoOpen] = useState(false)
+  const [isBreakOpen, setIsBreakOpen] = useState(false)
 
   return (
     <footer className="fixed bottom-0 left-0 right-0 bg-gray-800 bg-opacity-60 backdrop-blur-sm py-4">
@@ -160,7 +199,11 @@ export function Footer() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={Icon === MessageCircle ? () => setIsTodoOpen(!isTodoOpen) : onClick}
+                      onClick={
+                        Icon === MessageCircle ? () => setIsTodoOpen(!isTodoOpen) :
+                        Icon === Coffee ? () => setIsBreakOpen(!isBreakOpen) :
+                        onClick
+                      }
                       className="text-purple-300 hover:text-purple-100 hover:bg-transparent transition-colors duration-200"
                     >
                       <motion.div variants={iconVariants}>
@@ -183,6 +226,7 @@ export function Footer() {
         </TooltipProvider>
         <AnimatePresence>
           {isTodoOpen && <TodoModal isOpen={isTodoOpen} onClose={() => setIsTodoOpen(false)} />}
+          {isBreakOpen && <BreakModal isOpen={isBreakOpen} onClose={() => setIsBreakOpen(false)} />}
         </AnimatePresence>
       </div>
     </footer>
