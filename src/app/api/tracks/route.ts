@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextApiRequest, NextApiResponse } from "next";
 
 // Sample track data
 const tracks = [
@@ -7,15 +7,23 @@ const tracks = [
   { id: "3", title: "❤️‍🩹", url: "/sound/relaxing.mp3" },
 ];
 
-// API route handler
-export async function GET() {
-  try {
-    return NextResponse.json(tracks);
-  } catch (error: unknown) {
-    if (error && typeof error === 'object' && 'response' in error) {
-      const err = error as { response?: { data?: unknown } };
-      return NextResponse.json({ error: err.response?.data }, { status: 500 });
-    }
-    return NextResponse.json({ error: 'An unknown error occurred' }, { status: 500 });
+const alarm = [
+  { id: "1", title: "🔔", url: "/sound/alarm.mp3" },
+];
+
+const thundering = [
+  { id: "1", title: "⛈", url: "/sound/thundering.mp3" },
+];
+
+const birdChirping = [
+  { id: "1", title: "🕊️", url: "/sound/bird_chirping.mp3" },
+];
+
+// API route handler for tracks
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === "GET") {
+    return res.status(200).json({ tracks, alarm, thundering, birdChirping });
+  } else {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 }

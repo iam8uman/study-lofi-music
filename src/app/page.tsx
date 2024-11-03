@@ -55,6 +55,11 @@ export default function Home() {
       newAudio.volume = volume;
       setAudio(newAudio);
 
+      // Add autoplay
+      newAudio.play()
+        .then(() => setIsPlaying(true))
+        .catch(error => console.error("Autoplay failed:", error));
+
       newAudio.addEventListener("ended", handleNextTrack);
       return () => {
         newAudio.removeEventListener("ended", handleNextTrack);
@@ -94,10 +99,10 @@ export default function Home() {
       <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-[2px]">
         <div className="container mx-auto px-4 py-8 flex flex-col h-full">
           <header className="text-center mb-12">
-            <h1 className="text-5xl font-bold text-purple-300 mb-4 tracking-tight">
+            <h1 className="text-7xl font-bold text-white mb-4 tracking-tight font-mono">
               Lo-Fi Study Music
             </h1>
-            <p className="text-xl text-gray-300">Focus, Relax, and Study</p>
+            <p className="text-2xl text-purple-600">Focus, Relax, and Study</p>
           </header>
           <div className="flex-grow grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-start">
             <MusicControls
@@ -119,7 +124,7 @@ export default function Home() {
                 }
               />
             </div>
-            <div className="relative top-36 left-32">
+            <div className="relative top-[14rem] left-20">
               <Timer />
             </div>
           </div>
