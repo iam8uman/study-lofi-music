@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from 'next/server';
 
 // Sample track data
 const tracks = [
@@ -19,11 +19,11 @@ const birdChirping = [
   { id: "1", title: "🕊️", url: "/sound/bird_chirping.mp3" },
 ];
 
-// API route handler for tracks
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === "GET") {
-    return res.status(200).json({ tracks, alarm, thundering, birdChirping });
-  } else {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+export async function GET() {
+  return NextResponse.json({
+    tracks,
+    alarm,
+    thundering,
+    birdChirping
+  });
 }
