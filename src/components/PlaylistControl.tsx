@@ -56,7 +56,7 @@ export function PlaylistControl({
                   <DialogTitle className="text-purple-300">Playlist</DialogTitle>
                 </DialogHeader>
                 <ScrollArea className="h-[300px] w-full rounded-md border border-gray-700 p-4">
-                  {playlist.map((track) => (
+                  {Array.isArray(playlist) && playlist.map((track) => (
                     <div
                       key={track.id}
                       className="flex items-center justify-between py-2 border-b border-gray-700"

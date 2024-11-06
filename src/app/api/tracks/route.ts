@@ -10,23 +10,8 @@ const tracks = [
   { id: "6", title: "🏖", url: "/sound/wildlife.mp3" },
 ];
 
-const alarm = [
-  { id: "1", title: "🔔", url: "/sound/alarm.mp3" },
-];
-
-const thundering = [
-  { id: "1", title: "⛈", url: "/sound/thundering.mp3" },
-];
-
-const birdChirping = [
-  { id: "1", title: "🕊️", url: "/sound/bird_chirping.mp3" },
-];
-
 export async function GET() {
   return NextResponse.json({
     tracks,
-    alarm,
-    thundering,
-    birdChirping
   });
 }

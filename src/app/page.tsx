@@ -31,8 +31,8 @@ export default function Home() {
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const data = await response.json();
-        localStorage.setItem("audioTracks", JSON.stringify(data));
-        setTracks(data);
+        localStorage.setItem("audioTracks", JSON.stringify(data.tracks));
+        setTracks(data.tracks);
       } catch (error) {
         console.error("Error fetching tracks:", error);
         // Fallback tracks if API fails
@@ -53,23 +53,37 @@ export default function Home() {
   // Initialize and manage audio
   useEffect(() => {
     if (tracks.length > 0) {
+      // Cleanup previous audio before creating new one
+      if (audio) {
+        audio.pause();
+        audio.removeEventListener("ended", handleNextTrack);
+      }
+
       const track = tracks[currentTrackIndex];
       const newAudio = new Audio(track.url);
       newAudio.volume = volume;
+      
+      // Set audio before attempting to play
       setAudio(newAudio);
-
-      // Add autoplay
-      newAudio.play()
-        .then(() => setIsPlaying(true))
-        .catch(error => console.error("Autoplay failed:", error));
+      
+      // Only attempt autoplay if isPlaying is true
+      if (isPlaying) {
+        newAudio.play()
+          .catch(error => {
+            console.error("Playback failed:", error);
+            setIsPlaying(false);
+          });
+      }
 
       newAudio.addEventListener("ended", handleNextTrack);
+      
       return () => {
         newAudio.removeEventListener("ended", handleNextTrack);
         newAudio.pause();
       };
     }
-  }, [currentTrackIndex, tracks]);
+  }, [currentTrackIndex, tracks, volume, isPlaying]); // Added volume and isPlaying to dependencies
+
 
   // Handle Play/Pause
   const handlePlayPause = () => {

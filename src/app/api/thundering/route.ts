@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 
-const alarm = [
-  { id: "1", title: "🔔", url: "/sound/alarm.mp3" },
+const thundering = [
+    { id: "1", title: "⛈", url: "/sound/thundering.mp3" },
 ];
 
 export async function GET() {
   return NextResponse.json({
-    alarm,
+    thundering,
   });
 }
